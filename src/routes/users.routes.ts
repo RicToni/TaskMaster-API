@@ -9,9 +9,12 @@ import { validationResult } from 'express-validator';
 const router = Router();
 
 
-router.get('/', (req: Request, res: Response) => {
-
-    res.sendStatus(HttpStatusCodes.OK);
+router.get('/',async (req: Request, res: Response): Promise<void> => {
+    if (mockUsers.length === 0){
+        res.status(HttpStatusCodes.NOT_FOUND).json({errors: 'NÃO HÁ USUÁRIOS CADASTRADOS'})
+        return;
+    }
+    res.status(HttpStatusCodes.OK).send(mockUsers);    
 })
 
 router.post('/', createUserSchema, async (req: Request<{}, {}, User>, res: Response): Promise<void> => {

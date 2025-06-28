@@ -17,6 +17,26 @@ router.get('/',async (req: Request, res: Response): Promise<void> => {
     res.status(HttpStatusCodes.OK).send(mockUsers);    
 })
 
+router.get('/:id', async (req: Request<{ id: string }, {}, {}>, res: Response): Promise<void> => {
+    const { id } = req.params;
+    const parseId = parseInt(id);
+    if (isNaN(parseId)) {
+        res.status(HttpStatusCodes.BAD_REQUEST).json({errors: 'ID INVÁLIDO'})
+        return;
+    }
+
+    const user = mockUsers.find(user => user.id === parseId);
+    if (!user){
+        res.status(HttpStatusCodes.NOT_FOUND).json({error: 'Usuário não encontrado!'})
+        return;
+    }
+
+    res.status(HttpStatusCodes.OK).json(user);
+
+
+
+})
+
 router.post('/', createUserSchema, async (req: Request<{}, {}, User>, res: Response): Promise<void> => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

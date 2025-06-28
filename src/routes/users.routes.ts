@@ -32,9 +32,6 @@ router.get('/:id', async (req: Request<{ id: string }, {}, {}>, res: Response): 
     }
 
     res.status(HttpStatusCodes.OK).json(user);
-
-
-
 })
 
 router.post('/', createUserSchema, async (req: Request<{}, {}, User>, res: Response): Promise<void> => {

@@ -84,9 +84,22 @@ router.put('/:id', updateUserSchema, async (req: Request<{ id: string}, {}, Part
     res.status(HttpStatusCodes.OK).json(mockUsers[userIndex]);
 })
 
-router.delete('/:id', (req: Request, res: Response) => {
+router.delete('/:id', async(req: Request<{ id: string }>, res: Response): Promise<void> => {
+    const { id } = req.params;
+    const parseId = parseInt(id);
+    if (isNaN(parseId)) {
+        res.status(HttpStatusCodes.BAD_REQUEST).json({errors: "ID INVÁLIDO"});
+        return
+    }
 
-    res.sendStatus(HttpStatusCodes.OK);
+    const index = mockUsers.findIndex((user) => user.id === parseId);
+    if (index === -1){
+        res.status(HttpStatusCodes.NOT_FOUND).json({errors: "Usuário não encontrado!"});
+        return;
+    }
+
+    mockUsers.splice(index, 1);
+    res.status(HttpStatusCodes.OK).json({msg: 'Usuário excluido com sucesso'});
 })
 
 

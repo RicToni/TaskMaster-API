@@ -14,5 +14,18 @@ router.get('/', async(req: Request, res: Response): Promise <void> => {
 })
 
 router.get('/:id', async(req: Request, res: Response): Promise<void> => {
-    
+    const { id } = req.params;
+    const parseId = parseInt(id);
+    if (isNaN(parseId)) {
+        res.status(HttpStatusCodes.BAD_REQUEST).json({errors: 'ID INVÁLIDO'});
+        return
+    }
+
+    const task = mockTasks.find((task) => task.id === parseId);
+    if (!task) {
+        res.status(HttpStatusCodes.NOT_FOUND).json({error: 'Tarefa não encontrada a partir do ID informado.'})
+        return ; 
+    }
+
+    res.status(HttpStatusCodes.OK).json(task);
 })

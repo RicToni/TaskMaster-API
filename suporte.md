@@ -48,6 +48,23 @@ POST   /api/tags
 - express-validator — validações
 - dotenv — variáveis de ambiente
 
+## Orientações a se atentas:
+- Sempre retornar um 'json' nas responses, ainda que seja um erro. 
+- Seguir os padrões de erro em todas as responses. 
+- Tipar as requests
+- Usar os "enum's" para status das responses. 
+
+Exemplo: 
+```
+router.get('/', async(req: Request, res: Response): Promise <void> => {
+    if (mockTasks.length === 0) {
+        res.status(HttpStatusCodes.NOT_FOUND).json({errors: 'NENHUMA TAREFA CADASTRADA'});
+        return ;
+    }
+    res.status(HttpStatusCodes.OK).json(mockTasks);
+})
+```
+
 
 
 

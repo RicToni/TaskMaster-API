@@ -2,6 +2,9 @@ import { Router, Request, Response } from 'express';
 import { Task } from '../models/task.model';
 import { mockTasks } from '../repository/tasks';
 import { HttpStatusCodes } from '../utils/HttpStatusCode';
+import { createTaskSchema } from '../utils/Schemas/createTaskSchema';
+import { validationResult } from 'express-validator';
+import { mockUsers } from '../repository/users';
 
 const router = Router();
 
@@ -28,4 +31,34 @@ router.get('/:id', async(req: Request, res: Response): Promise<void> => {
     }
 
     res.status(HttpStatusCodes.OK).json(task);
+})
+
+router.post('/', createTaskSchema, async (req:Request<{}, {}, Task>, res: Response): Promise<void> => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()){
+        res.status(HttpStatusCodes.BAD_REQUEST).json({errors: errors.array()})
+        return ;
+    }
+    
+    const {
+        title,
+        description = '',
+        completed = false,
+        userId,
+        tagIds = []
+      } = req.body;
+
+    const newTask:Task = {
+        id: mockTasks.length + 1,
+        title,
+        description,
+        completed,
+        userId,
+        tagIds,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    }
+
+    mockTasks.push(newTask);
+    res.status(HttpStatusCodes.CREATED).json(newTask);
 })

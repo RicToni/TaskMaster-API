@@ -64,6 +64,30 @@ router.get('/', async(req: Request, res: Response): Promise <void> => {
     res.status(HttpStatusCodes.OK).json(mockTasks);
 })
 ```
+- Nas rotas 'POST' retornar o objeto criado em formato json
+
+```
+router.post('/', createUserSchema, async (req: Request<{}, {}, User>, res: Response): Promise<void> => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.status(HttpStatusCodes.BAD_REQUEST).json({errors: errors.array() })
+        return;
+    }
+
+    const { name , email, passwordHash } = req.body;
+    const newUser:User = {
+        id: mockUsers.length + 1,
+        name, 
+        email, 
+        passwordHash, 
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    }
+    mockUsers.push(newUser);
+    res.status(HttpStatusCodes.CREATED).json(newUser);
+})
+```
+
 
 
 

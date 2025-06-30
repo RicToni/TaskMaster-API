@@ -48,7 +48,9 @@ POST   /api/tags
 - express-validator — validações
 - dotenv — variáveis de ambiente
 
-## Orientações a se atentas:
+
+
+## Orientações a se atentar:
 - Sempre retornar um 'json' nas responses, ainda que seja um erro. 
 - Seguir os padrões de erro em todas as responses. 
 - Tipar as requests
@@ -87,6 +89,12 @@ router.post('/', createUserSchema, async (req: Request<{}, {}, User>, res: Respo
     res.status(HttpStatusCodes.CREATED).json(newUser);
 })
 ```
+
+# NÃO SE ESQUECER, DE JEITO NENHUM:
+- Após finalizar as rotas de 'task', 'users' e 'tags', integrar todas, lembrando de:
+    - Ao excluir um usuário, excluir as tasks a ela associadas
+    - Ao excluir uma task, excluir as tags a ela associadas. 
+    
 
 
 

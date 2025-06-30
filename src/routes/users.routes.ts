@@ -14,7 +14,7 @@ router.get('/',async (req: Request, res: Response): Promise<void> => {
         res.status(HttpStatusCodes.NOT_FOUND).json({errors: 'NÃO HÁ USUÁRIOS CADASTRADOS'})
         return;
     }
-    res.status(HttpStatusCodes.OK).send(mockUsers);    
+    res.status(HttpStatusCodes.OK).json(mockUsers);    
 })
 
 router.get('/:id', async (req: Request<{ id: string }, {}, {}>, res: Response): Promise<void> => {

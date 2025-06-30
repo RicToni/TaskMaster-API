@@ -5,10 +5,14 @@ import { HttpStatusCodes } from '../utils/HttpStatusCode';
 
 const router = Router();
 
-router.get('/', (req: Request, res: Response) => {
+router.get('/', async(req: Request, res: Response): Promise <void> => {
     if (mockTasks.length === 0) {
         res.status(HttpStatusCodes.NOT_FOUND).json({errors: 'NENHUMA TAREFA CADASTRADA'});
         return ;
     }
     res.status(HttpStatusCodes.OK).json(mockTasks);
+})
+
+router.get('/:id', async(req: Request, res: Response): Promise<void> => {
+    
 })

@@ -5,6 +5,7 @@ import { HttpStatusCodes } from '../utils/HttpStatusCode';
 import { createTaskSchema } from '../utils/Schemas/createTaskSchema';
 import { validationResult } from 'express-validator';
 import { mockUsers } from '../repository/users';
+import { updateTaskSchema } from '../utils/Schemas/updateTaskSchema';
 
 const router = Router();
 
@@ -61,4 +62,43 @@ router.post('/', createTaskSchema, async (req:Request<{}, {}, Task>, res: Respon
 
     mockTasks.push(newTask);
     res.status(HttpStatusCodes.CREATED).json(newTask);
+})
+
+router.put('/:id', updateTaskSchema, async (req: Request<{ id: string}, {}, Partial<Task>>, res: Response): Promise<void> => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.status(HttpStatusCodes.BAD_REQUEST).json({errors: errors.array()})
+        return
+    }
+
+    const { id } = req.params;
+    const {
+        title,
+        description,
+        completed,
+        userId,
+        tagIds
+    } = req.body;
+
+    const parseId = parseInt(id, 10);
+    if (isNaN(parseId)){
+        res.status(HttpStatusCodes.BAD_REQUEST).json({errors: 'ID INVÁVLIDO'})
+        return;
+    }
+
+    const taskIndex = mockTasks.findIndex(task => task.id === parseId);
+    if (taskIndex === -1){
+        res.status(HttpStatusCodes.NOT_FOUND).json({errors: 'Tarefa não encontrada com base no ID informado'})
+        return;
+    }
+
+    if (title) mockTasks[taskIndex].title = title;
+    if (typeof description === 'boolean') mockTasks[taskIndex].description = description;
+    if (completed) mockTasks[taskIndex].completed = completed;
+    if (userId) mockTasks[taskIndex].userId = userId;
+    if (tagIds) mockTasks[taskIndex].tagIds = tagIds;
+    mockTasks[taskIndex].updatedAt = new Date();
+
+    res.status(HttpStatusCodes.OK).json(mockTasks[taskIndex]);
+
 })

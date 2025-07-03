@@ -72,7 +72,7 @@ router.put('/:id', updateUserSchema, async (req: Request<{ id: string}, {}, Part
 
     const userIndex = mockUsers.findIndex(user => user.id === parseId);
     if (userIndex === -1){
-        res.send(HttpStatusCodes.NOT_FOUND).json({error: 'Usuário não encontrado.'})
+        res.status(HttpStatusCodes.NOT_FOUND).json({error: 'Usuário não encontrado.'})
         return;
     }
     

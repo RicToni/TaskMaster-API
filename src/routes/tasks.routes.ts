@@ -4,7 +4,6 @@ import { mockTasks } from '../repository/tasks';
 import { HttpStatusCodes } from '../utils/HttpStatusCode';
 import { createTaskSchema } from '../utils/Schemas/createTaskSchema';
 import { validationResult } from 'express-validator';
-import { mockUsers } from '../repository/users';
 import { updateTaskSchema } from '../utils/Schemas/updateTaskSchema';
 
 const router = Router();
@@ -121,3 +120,5 @@ router.delete('/:id', async (req: Request<{ id:string }>, res: Response) : Promi
     res.status(HttpStatusCodes.OK).json({msg: 'Tarefa exluída com sucesso.'})
     return;
 })
+
+export default router;

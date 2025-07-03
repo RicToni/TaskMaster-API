@@ -8,7 +8,6 @@ import { validationResult } from 'express-validator';
 
 const router = Router();
 
-///////////// CONVERTER TODOS OS .send PARA .json ////////////////
 router.get('/',async (req: Request, res: Response): Promise<void> => {
     if (mockUsers.length === 0){
         res.status(HttpStatusCodes.NOT_FOUND).json({errors: 'NÃO HÁ USUÁRIOS CADASTRADOS'})
@@ -101,7 +100,5 @@ router.delete('/:id', async(req: Request<{ id: string }>, res: Response): Promis
     mockUsers.splice(index, 1);
     res.status(HttpStatusCodes.OK).json({msg: 'Usuário excluido com sucesso'});
 })
-
-
 
 export default router;

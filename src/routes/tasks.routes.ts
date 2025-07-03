@@ -102,3 +102,22 @@ router.put('/:id', updateTaskSchema, async (req: Request<{ id: string}, {}, Part
     res.status(HttpStatusCodes.OK).json(mockTasks[taskIndex]);
 
 })
+
+router.delete('/:id', async (req: Request<{ id:string }>, res: Response) : Promise<void> => {
+    const { id } = req.params;
+    const parseId = parseInt(id);
+    if (isNaN(parseId)) {
+        res.status(HttpStatusCodes.BAD_REQUEST).json({errors: 'ID INVÁLIDO'});
+        return;
+    }
+
+    const taskIndex = mockTasks.findIndex(task => task.id === parseId);
+    if (taskIndex === -1) {
+        res.status(HttpStatusCodes.NOT_FOUND).json({errors: 'Tarefa não encontrada.'});
+        return;
+    }
+
+    mockTasks.splice(taskIndex, 1);
+    res.status(HttpStatusCodes.OK).json({msg: 'Tarefa exluída com sucesso.'})
+    return;
+})

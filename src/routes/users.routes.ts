@@ -5,6 +5,7 @@ import { mockUsers } from '../repository/users';
 import { createUserSchema } from '../utils/Schemas/createUserSchema';
 import { updateUserSchema } from '../utils/Schemas/updateUserSchema';
 import { validationResult } from 'express-validator';
+import { mockTags } from '../repository/tags';
 
 const router = Router();
 
@@ -24,13 +25,13 @@ router.get('/:id', async (req: Request<{ id: string }, {}, {}>, res: Response): 
         return;
     }
 
-    const user = mockUsers.find(user => user.id === parseId);
-    if (!user){
-        res.status(HttpStatusCodes.NOT_FOUND).json({errors: 'Usuário não encontrado!'})
+    const tag = mockTags.find(tag => tag.id === parseId);
+    if (!tag){
+        res.status(HttpStatusCodes.NOT_FOUND).json({errors: 'Tag não encontrado!'})
         return;
     }
 
-    res.status(HttpStatusCodes.OK).json(user);
+    res.status(HttpStatusCodes.OK).json(tag);
 })
 
 router.post('/', createUserSchema, async (req: Request<{}, {}, User>, res: Response): Promise<void> => {
@@ -91,14 +92,14 @@ router.delete('/:id', async(req: Request<{ id: string }>, res: Response): Promis
         return
     }
 
-    const index = mockUsers.findIndex((user) => user.id === parseId);
+    const index = mockTags.findIndex((user) => user.id === parseId);
     if (index === -1){
-        res.status(HttpStatusCodes.NOT_FOUND).json({errors: "Usuário não encontrado!"});
+        res.status(HttpStatusCodes.NOT_FOUND).json({errors: "Tag não encontrado!"});
         return;
     }
 
-    mockUsers.splice(index, 1);
-    res.status(HttpStatusCodes.OK).json({msg: 'Usuário excluido com sucesso'});
+    mockTags.splice(index, 1);
+    res.status(HttpStatusCodes.OK).json({msg: 'Tag excluido com sucesso'});
 })
 
 export default router;

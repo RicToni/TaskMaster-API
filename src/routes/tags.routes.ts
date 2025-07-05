@@ -5,6 +5,7 @@ import { updateTagSchema } from '../utils/Schemas/updateTagSchema';
 import { Tag } from '../models/tags.model';
 import { mockTags } from '../repository/tags';
 import { HttpStatusCodes } from '../utils/HttpStatusCode';
+import { parse } from 'dotenv';
 
 const router = Router();
 
@@ -18,9 +19,21 @@ router.get('/', async (req: Request, res: Response): Promise<void> =>{
 })
 
 router.get('/:id', async (req: Request< { id: string }, {}, {}>, res: Response): Promise<void> => {
+    const { id } = req.params;
+    const parseId = parseInt(id);
+    if (isNaN(parseId)){
+        res.status(HttpStatusCodes.BAD_REQUEST).json({errors: 'ID INVÁLIDO'});
+        return;
+    }
 
+    const tag = mockTags.find(tag => tag.id === parseId);
+    if (!tag) {
+        res.status(HttpStatusCodes.NOT_FOUND).json({errors: 'Tag não encontrada.'});
+        return;
+    }
+
+    res.status(HttpStatusCodes.OK).json(tag);
 })
-
 
 router.post('/', createTagSchema,  async (req: Request<{}, {}, Tag>, res: Response): Promise<void>  => {
     const errors = validationResult(req);
@@ -70,6 +83,24 @@ router.put('/:id', updateTagSchema, async (req: Request< {id: string}, {}, Parti
     mockTags[tagIndex].updatedAt = new Date();
 
     res.status(HttpStatusCodes.OK).json(mockTags[tagIndex]);
+})
+
+router.delete('/:id', async (req: Request< {id: string}, {}, {}>, res: Response): Promise<void> => {
+    const { id } = req.params;
+    const parseId = parseInt(id);
+    if (isNaN(parseId)){
+        res.status(HttpStatusCodes.BAD_REQUEST).json({errors: 'ID INVÁLIDO'});
+        return;
+    }
+
+    const index = mockTags. findIndex(tag => tag.id === parseId);
+    if (index === -1){
+        res.status(HttpStatusCodes.NOT_FOUND).json({errors: 'Tag não encontrada'});
+        return;
+    }
+
+    mockTags.splice(index, 1);
+    res.status(HttpStatusCodes.OK).json({msg: 'Tag excluída com sucesso.'})
 })
 
 export default router;

@@ -8,6 +8,20 @@ import { HttpStatusCodes } from '../utils/HttpStatusCode';
 
 const router = Router();
 
+router.get('/', async (req: Request, res: Response): Promise<void> =>{
+    if (mockTags.length === 0){
+        res.status(HttpStatusCodes.NOT_FOUND).json({errors: 'Nenhuma Tag cadastrada'});
+        return;
+    }
+
+    res.status(HttpStatusCodes.OK).json(mockTags);
+})
+
+router.get('/:id', async (req: Request< { id: string }, {}, {}>, res: Response): Promise<void> => {
+
+})
+
+
 router.post('/', createTagSchema,  async (req: Request<{}, {}, Tag>, res: Response): Promise<void>  => {
     const errors = validationResult(req);
     if (!errors.isEmpty){

@@ -26,7 +26,7 @@ router.get('/:id', async (req: Request<{ id: string }, {}, {}>, res: Response): 
 
     const user = mockUsers.find(user => user.id === parseId);
     if (!user){
-        res.status(HttpStatusCodes.NOT_FOUND).json({error: 'Usuário não encontrado!'})
+        res.status(HttpStatusCodes.NOT_FOUND).json({errors: 'Usuário não encontrado!'})
         return;
     }
 
